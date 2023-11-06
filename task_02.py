@@ -14,3 +14,9 @@ class ShoppingCart:
             total += data['quantity'] * data['price']
         return total
 
+    def display_items(self):
+        for product, data in self.__items.items():
+            print(f"Product: {product} quantity {data['quantity']} ps price {data['price']}")
+
+    
+
