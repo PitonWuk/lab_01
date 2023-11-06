@@ -18,5 +18,10 @@ class ShoppingCart:
         for product, data in self.__items.items():
             print(f"Product: {product} quantity {data['quantity']} ps price {data['price']}")
 
-    
+
+cart = ShoppingCart()
+cart.add_items('Phone', 2, 100)
+cart.add_items('Book', 3, 300)
+cart.display_items()
+print("Total price: ", cart.calculate_total())
 
