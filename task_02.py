@@ -24,4 +24,4 @@ cart.add_items('Phone', 2, 100)
 cart.add_items('Book', 3, 300)
 cart.display_items()
 print("Total price: ", cart.calculate_total())
-
+.
