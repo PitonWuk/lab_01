@@ -16,7 +16,7 @@ class HotelManagementSystem:
         self._num_days = num_days
         self._cost_per_day = cost_per_day
         self._total_cost = self._calculate_total_cost()
-        self.orders = []
+        self._orders = []
 
     def _calculate_total_cost(self):
         return self._num_days * self._cost_per_day
@@ -43,13 +43,13 @@ class HotelManagementSystem:
 
     def remove_order(self, order_id):
         order_to_remove = None
-        for order in self.orders:
+        for order in self._orders:
             if order["order_id"] == order_id:
                 order_to_remove = order
                 break
 
         if order_to_remove:
-            self.orders.remove(order_to_remove)
+            self._orders.remove(order_to_remove)
             print(f"Order with ID {order_id} has been removed.")
         else:
             print(f"Order with ID {order_id} not found.")
