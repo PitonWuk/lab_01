@@ -1,3 +1,11 @@
+"""
+Завдання 2
+Реалізуйте клас "Кошик для покупок" з можливістю
+додавання товарів та підрахунку загальної вартості.
+Застосуйте інкапсуляцію для забезпечення правильності
+обробки даних. 
+"""
+
 class ShoppingCart:
     def __init__(self):
         self.__items = {}
@@ -24,4 +32,4 @@ cart.add_items('Phone', 2, 100)
 cart.add_items('Book', 3, 300)
 cart.display_items()
 print("Total price: ", cart.calculate_total())
-.
+
