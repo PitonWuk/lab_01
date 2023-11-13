@@ -18,7 +18,9 @@ class Clock:
         self.minutes = minutes
 
     def display_times(self):
-        print(f"{self.hours:02d}:{self.minutes:02d}")
+        super().display_times()
+        #print(f"{self.hours:02d}:{self.minutes:02d}")
+
 
 class AnalogClock(Clock):
     pass
