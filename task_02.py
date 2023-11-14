@@ -14,15 +14,32 @@ class AreaCalculator:
         AreaCalculator.count_of_calculation += 1
         return 0.5 * h * a
 
-    def square_area(a, b):
+    @staticmethod
+    def rectangle_area(a, b):
         AreaCalculator.count_of_calculation += 1
         return a * b
 
+    @staticmethod
+    def square_area(a):
+        AreaCalculator.count_of_calculation += 1
+        return a ** 2
+
+    @staticmethod
+    def rhombus_area(diagonal1, diagonal2):
+        AreaCalculator.count_of_calculation += 1
+        return 0.5 * diagonal1 * diagonal2
+
+
 triangle = AreaCalculator.triangle_area(2, 5)
-square = AreaCalculator.square_area(3, 6)
+rectangle = AreaCalculator.rectangle_area(3, 8)
+square = AreaCalculator.square_area(3)
+rhombus = AreaCalculator.rhombus_area(10, 13)
 print(triangle)
-print("Quantity", AreaCalculator.count_of_calculation)
+print(rectangle)
 print(square)
+print(rhombus)
+print("Quantity", AreaCalculator.count_of_calculation)
+
 
 
 
