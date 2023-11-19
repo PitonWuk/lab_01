@@ -4,39 +4,41 @@
 «Колеса», «Двигун», «Двері» та ін.
 """
 class Wheels:
-    def __init__(self, count):
-        self.count = count
+    def __init__(self, brand, size):
+        self.brand = brand
+        self.size = size
 
-class B(A):
-    def go(self):
-        super(B, self).stop()
-        print("go B go!")
+    def display_info(self):
+        print(f"Wheels: Brand - {self.brand}, Size - {self.size}")
+
+
 class Engine:
-    def __init__(self, power):
-        self.power = power
+    def __init__(self, fuel_type, horsepower):
+        self.fuel_type = fuel_type
+        self.horsepower = horsepower
+
+    def display_info(self):
+        print(f"Engine: Fuel Type - {self.fuel_type}, Horsepower - {self.horsepower}")
+
 
 class Doors:
-    def __init__(self, open = False):
-        self.open = open
+    def __init__(self, number, style):
+        self.number = number
+        self.style = style
 
-class C(A):
-    def go(self):
-        super(C, self).go()
-        print("go C go!")
-    def stop(self):
-        super(C, self).stop()
-        print("stop C stop!")
+    def display_info(self):
+        print(f"Doors: Number - {self.number}, Style - {self.style}")
+
+
 class Car(Wheels, Engine, Doors):
-    def __init__(self, count, power, open):
-        Wheels.__init__(self, count)
-        Engine.__init__(self, power)
-        Doors.__init__(self, open)
+    def __init__(self, brand, size, fuel_type, horsepower, number_of_doors, door_style):
+        Wheels.__init__(self, brand, size)
+        Engine.__init__(self, fuel_type, horsepower)
+        Doors.__init__(self, number_of_doors, door_style)
 
+    def display_car_info(self):
+        print("Car Information:")
+        self.display_info()
 
-class E(B,C):
-    pass
-
-e=E()
-e.go()
-car = Car(4, 150, True)
-print(car.__dict__)
+my_car = Car(brand="Michelin", size=18, fuel_type="Gasoline", horsepower=200, number_of_doors=4, door_style="Sedan")
+my_car.display_car_info()
