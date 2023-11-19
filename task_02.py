@@ -1,59 +1,61 @@
 """
 Завдання 2
-Розробіть систему управління замовленнями таксі.
-Кожне замовлення має містити інформацію про
-клієнта, адресу, тип автомобіля та вартість. Реалізуйте
-методи для додавання нових замовлень, зміни адреси та
-типу автомобіля, а також видалення замовлення.
-Використайте інкапсуляцію для захисту вартості від
-неправильних змін.
+Для класів із першого завдання перевизначте магічні
+методи int (повертає площу) та str (повертає інформацію
+про фігуру).
 """
-class TaxiOrderManagementSystem:
-    def __init__(self):
-        self._orders = []
+import math
+from abc import ABC, abstractmethod
 
-    def add_order(self, client, address, car_type, cost):
-        order = {
-            "client": client,
-            "address": address,
-            "car_type": car_type,
-            "cost": cost
-        }
-        self._orders.append(order)
-        print("New order added.")
+class Figure(ABC):
+    @abstractmethod
+    def area(self):
+        pass
 
-    def update_order(self, order_id, new_address, new_car_type):
+    def __str__(self):
+        return f"Figure: {type(self).__name__}"
 
-        for order in self._orders:
-            if order.get("order_id") == order_id:
+    def __int__(self):
+        return int(self.area())
 
-                if new_address:
-                    order["address"] = new_address
-                if new_car_type:
-                    order["car_type"] = new_car_type
-                print(f"Order {order_id} updated.")
-                break
-        else:
-            print(f"Order with ID {order_id} not found.")
+class Rectangle(Figure):
+    def __init__(self, length, width):
+        self.length = length
+        self.width = width
 
-    def remove_order(self, order_id):
+    def area(self):
+        return self.length * self.width
 
-        order_to_remove = None
-        for order in self._orders:
-            if order.get("order_id") == order_id:
-                order_to_remove = order
-                break
+class Circle(Figure):
+    def __init__(self, radius):
+        self.radius = radius
 
+    def area(self):
+        return math.pi * self.radius**2
 
-        if order_to_remove:
-            self._orders.remove(order_to_remove)
-            print(f"Order with ID {order_id} has been removed.")
-        else:
-            print(f"Order with ID {order_id} not found.")
+class Triangle(Figure):
+    def __init__(self, base, height):
+        self.base = base
+        self.height = height
 
-taxi_system = TaxiOrderManagementSystem()
-taxi_system.add_order("John Doe", "123 Main St", "Sedan", 25.0)
-taxi_system.add_order("Jane Smith", "456 Oak St", "SUV", 40.0)
+    def area(self):
+        return 0.5 * self.base * self.height
 
-taxi_system.update_order(1, new_address="789 Elm St", new_car_type="Van")
-taxi_system.remove_order(2)
+class Trapezoid(Figure):
+    def __init__(self, base1, base2, height):
+        self.base1 = base1
+        self.base2 = base2
+        self.height = height
+
+    def area(self):
+        return 0.5 * (self.base1 + self.base2) * self.height
+
+rectangle = Rectangle(5, 8)
+circle = Circle(4)
+triangle = Triangle(6, 10)
+trapezoid = Trapezoid(3, 7, 4)
+
+figures = [rectangle, circle, triangle, trapezoid]
+
+for figure in figures:
+    print(f"{str(figure)} - Area: {figure.area()}, Int: {int(figure)}")
