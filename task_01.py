@@ -52,4 +52,4 @@ trapezoid = Trapezoid(3, 7, 4)
 figures = [rectangle, circle, triangle, trapezoid]
 
 for figure in figures:
-    print(f"Area of {type(figure).__name__}: {figure.area()}")
+    print(f"Area of {type(figure).__name__}:  {figure.area()}")
