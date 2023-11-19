@@ -8,77 +8,97 @@
 ■ Show — відображає ім’я тварини;
 ■ Type — відображає підвид тварини.
 """
-class DomesticAnimal:
-    def __init__(self, name):
+class Pet:
+    def __init__(self, name, species):
         self.name = name
-
-    def sound(self):
-        pass
+        self.species = species
 
     def show(self):
-        print(f"Name {self.name}")
+        print(f"Name: {self.name}")
 
-class Dog(DomesticAnimal):
-    pass
-
-class Cat(DomesticAnimal):
-    pass
-
-class Parrot(DomesticAnimal):
-    pass
-
-class Hamster(DomesticAnimal):
-    pass
-
-|||||||||||||||||||||||||||||||||||||||||||||||||
-
-from dataclasses import dataclass
+    def type(self):
+        print(f"Species: {self.species}")
 
 
-@dataclass
-class DomesticAnimal:
-    _name: str
-    _type_of_animal: str
-
+class Dog(Pet):
     def sound(self):
-        pass
+        print("Woof! Woof!")
 
-    def show(self):
-        print(f'{self._name}')
-
-    def type_of_animal(self):
-        print(self._type_of_animal)
-
-
-@dataclass
-class Dog(DomesticAnimal):
+class Cat(Pet):
     def sound(self):
-        print('Gav-Gav-Gav')
+        print("Meow!")
 
-
-@dataclass
-class Cat(DomesticAnimal):
+class Parrot(Pet):
     def sound(self):
-        print('Miau-Miau')
+        print("Squawk! Squawk!")
 
-
-@dataclass
-class Perrot(DomesticAnimal):
+class Hamster(Pet):
     def sound(self):
-        print('Kria-Kria')
+        print("Squeak!")
+
+dog = Dog(name="Dog", species="Dog")
+cat = Cat(name="Tom", species="Cat")
+parrot = Parrot(name="Polly", species="Parrot")
+hamster = Hamster(name="Miky", species="Hamster")
+
+pets = [dog, cat, parrot, hamster]
+
+for pet in pets:
+    pet.show()
+    pet.type()
+    pet.sound()
+    print()
 
 
-@dataclass
-class Hamster(DomesticAnimal):
-    def sound(self):
-        print('Nyam-Nyam')
-
-
-dog = Dog('Hatiko', 'Dog')
-cat = Cat('Matroskin', 'Cat')
-parrot = Cat('Kesha', 'Parrot')
-hamster = Hamster('Homyak', 'Hamster')
-
-dog.sound()
-dog.show()
-dog.type_of_animal()
+# ||||||||||||||||||||КОД Сергія|||||||||||||||||||||||||||||
+#
+# from dataclasses import dataclass
+#
+#
+# @dataclass
+# class DomesticAnimal:
+#     _name: str
+#     _type_of_animal: str
+#
+#     def sound(self):
+#         pass
+#
+#     def show(self):
+#         print(f'{self._name}')
+#
+#     def type_of_animal(self):
+#         print(self._type_of_animal)
+#
+#
+# @dataclass
+# class Dog(DomesticAnimal):
+#     def sound(self):
+#         print('Gav-Gav-Gav')
+#
+#
+# @dataclass
+# class Cat(DomesticAnimal):
+#     def sound(self):
+#         print('Miau-Miau')
+#
+#
+# @dataclass
+# class Perrot(DomesticAnimal):
+#     def sound(self):
+#         print('Kria-Kria')
+#
+#
+# @dataclass
+# class Hamster(DomesticAnimal):
+#     def sound(self):
+#         print('Nyam-Nyam')
+#
+#
+# dog = Dog('Hatiko', 'Dog')
+# cat = Cat('Matroskin', 'Cat')
+# parrot = Cat('Kesha', 'Parrot')
+# hamster = Hamster('Homyak', 'Hamster')
+#
+# dog.sound()
+# dog.show()
+# dog.type_of_animal()
