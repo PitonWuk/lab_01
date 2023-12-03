@@ -37,13 +37,13 @@ class Calculator:
 
 calculator = Calculator()
 
-result = calculator('add', 5, 3)
+result = calculator('add', 15, 8)
 print("Addition:", result)
 
 result = calculator('subtract', 5, 3)
 print("Subtraction:", result)
 
-result = calculator('multiply', 5, 3)
+result = calculator('multiply', 5, 7)
 print("Multiplication:", result)
 
 result = calculator('divide', 5, 3)
