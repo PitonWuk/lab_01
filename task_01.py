@@ -1,55 +1,50 @@
 """
 Завдання 1
-Створіть базовий клас «Фігура» з методом для підрахунку
-площі. Створіть похідні класи: прямокутник, коло, прямокутний трикутник, трапеція, зі своїми методами для підрахунку
-площі.
+Створіть клас Calculator, який може виконувати
+операції додавання, віднімання, множення та ділення.
+Кожна операція буде реалізована як метод класу.
+Об'єкт класу Calculator буде функтором, що може
+викликатися для виконання обраної операції.
 """
-import math
-from abc import ABC, abstractmethod
+class Calculator:
+    def add(self, x, y):
+        return x + y
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+    def subtract(self, x, y):
+        return x - y
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+    def multiply(self, x, y):
+        return x * y
 
-    def area(self):
-        return self.length * self.width
+    def divide(self, x, y):
+        if y != 0:
+            return x / y
+        else:
+            raise ValueError("Division by zero is not possible.")
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+    def __call__(self, operation, x, y):
 
-    def area(self):
-        return math.pi * self.radius**2
+        if operation == 'add':
+            return self.add(x, y)
+        elif operation == 'subtract':
+            return self.subtract(x, y)
+        elif operation == 'multiply':
+            return self.multiply(x, y)
+        elif operation == 'divide':
+            return self.divide(x, y)
+        else:
+            raise ValueError("Incorrect operation.")
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+calculator = Calculator()
 
-    def area(self):
-        return 0.5 * self.base * self.height
+result = calculator('add', 5, 3)
+print("Addition:", result)
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+result = calculator('subtract', 5, 3)
+print("Subtraction:", result)
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
+result = calculator('multiply', 5, 3)
+print("Multiplication:", result)
 
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
-
-figures = [rectangle, circle, triangle, trapezoid]
-
-for figure in figures:
-    print(f"Area of {type(figure).__name__}:  {figure.area()}")
+result = calculator('divide', 5, 3)
+print("Division:", result)
