@@ -1,55 +1,30 @@
 """
 Завдання 1
-Створіть базовий клас «Фігура» з методом для підрахунку
-площі. Створіть похідні класи: прямокутник, коло, прямокутний трикутник, трапеція, зі своїми методами для підрахунку
-площі.
+ Метаклас, який вносить додаткові перевірки/логіку
+до певних методів у всіх класах.
 """
-import math
-from abc import ABC, abstractmethod
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+class MyMetaClass(type):
+    def __new__(cls, name, bases, dct):
 
-    def area(self):
-        return self.length * self.width
+        original_method = dct.get('my_method', None)
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+        if original_method:
+            def new_method(self, *args, **kwargs):
+                print(f"The method is called {name}.my_method with additional logic.")
 
-    def area(self):
-        return math.pi * self.radius**2
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+                return original_method(self, *args, **kwargs)
 
-    def area(self):
-        return 0.5 * self.base * self.height
+            dct['my_method'] = new_method
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+        return super().__new__(cls, name, bases, dct)
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
+class MyClass(metaclass=MyMetaClass):
+    def my_method(self):
+        print("The original method is called my_method.")
 
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
 
-figures = [rectangle, circle, triangle, trapezoid]
-
-for figure in figures:
-    print(f"Area of {type(figure).__name__}:  {figure.area()}")
+obj = MyClass()
+obj.my_method()
