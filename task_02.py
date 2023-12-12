@@ -1,61 +1,77 @@
 """
 Завдання 2
-Для класів із першого завдання перевизначте магічні
-методи int (повертає площу) та str (повертає інформацію
-про фігуру).
+При старті програми з’являється меню з наступними
+пунктами:
+1. Завантаження даних;
+2. Збереження даних;
+3. Додавання даних;
+4. Видалення даних.
+Використайте список цілих як сховища даних. Також
+застосуйте стиснення/розпакування даних.
 """
-import math
-from abc import ABC, abstractmethod
+import gzip
+import pickle
+def load_data(filename):
+    try:
+        with gzip.open(filename, 'rb') as file:
+            data = pickle.load(file)
+            return data
+    except FileNotFoundError:
+        return []
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+def save_data(data, filename):
+    with gzip.open(filename, 'wb') as file:
+        pickle.dump(data, file)
 
-    def __str__(self):
-        return f"Figure: {type(self).__name__}"
+def add_data(data, item):
+    data.append(item)
 
-    def __int__(self):
-        return int(self.area())
+def remove_data(data, item):
+    if item in data:
+        data.remove(item)
+        print(f"Eelement {item} deleted.")
+    else:
+        print(f"Element {item} was not found.")
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+def menu():
+    data_filename = "data.gz"
+    data = load_data(data_filename)
 
-    def area(self):
-        return self.length * self.width
+    while True:
+        print("\nMenu:")
+        print("1. Load data")
+        print("2. Save data")
+        print("3. Add data")
+        print("4. Delete data")
+        print("0. Exit")
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+        choice = input("Make your choice: ")
+        if choice == '1':
+            data = load_data(data_filename)
+            print("Data loaded.")
 
-    def area(self):
-        return math.pi * self.radius**2
+        elif choice == '2':
+            save_data(data, data_filename)
+            print("Data saved.")
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+        elif choice == '3':
+            item = int(input('Enter integer number for adding: '))
+            add_data(data, item)
+            print("Data added.")
 
-    def area(self):
-        return 0.5 * self.base * self.height
+        elif choice == '4':
+            item = int(input('Enter integer number for delete: '))
+            remove_data(data, item)
+            print("Data deleted.")
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+        elif choice == '0':
+            save_data(data, data_filename)
+            print("Thank you! \nData saved.")
+            break
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
+        else:
+            print("Try again!")
 
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
+menu()
 
-figures = [rectangle, circle, triangle, trapezoid]
 
-for figure in figures:
-    print(f"{str(figure)} - Area: {figure.area()}, Int: {int(figure)}")
