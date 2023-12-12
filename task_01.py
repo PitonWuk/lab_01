@@ -1,55 +1,95 @@
 """
 Завдання 1
-Створіть базовий клас «Фігура» з методом для підрахунку
-площі. Створіть похідні класи: прямокутник, коло, прямокутний трикутник, трапеція, зі своїми методами для підрахунку
-площі.
+Маємо певний словник з назвами країн і столиць. Назва
+країни використовується як ключ, назва столиці — як значення. Реалізуйте: додавання, видалення, пошук, редагування,
+збереження та завантаження даних (використовуючи стиснення та розпакування).
 """
-import math
-from abc import ABC, abstractmethod
+import gzip
+import pickle
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+def load_data(filename):
+    try:
+        with gzip.open(filename, 'rb') as file:
+            data = pickle.load(file)
+            return data
+    except FileNotFoundError:
+        return {}
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+def save_data(data, filename):
+    with gzip.open(filename, 'wb') as file:
+        pickle.dump(data, file)
 
-    def area(self):
-        return self.length * self.width
+def add_country(data, country, capital):
+    data[country] = capital
+    print(f"Added: {country} — {capital}.")
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+def remove_country(data, country):
+    if country in data:
+        del data[country]
+        print(f"Deleted: {country}.")
+    else:
+        print(f"Country {country} was not found.")
 
-    def area(self):
-        return math.pi * self.radius**2
+def search_country(data, country):
+    if country in data:
+        print(f"{country} — {data[country]}.")
+    else:
+        print(f"Country {country} was not found.")
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+def edit_country(data, country, new_capital):
+    if country in data:
+        data[country] = new_capital
+        print(f"Edited: {country} — {new_capital}.")
+    else:
+        print(f"Country {country} was not found.")
 
-    def area(self):
-        return 0.5 * self.base * self.height
+def menu():
+    data_filename = "countries_data.gz"
+    countries_data = load_data(data_filename)
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+    while True:
+        print("\nMenu:")
+        print("1. Adding a country")
+        print("2. Deleting a country")
+        print("3. Search for a country")
+        print("4. Editing the capital")
+        print("5. Saving data")
+        print("6. Loading data")
+        print("0. Exit")
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
+        choice = input("Make your choice: ")
 
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
+        if choice == "1":
+            country = input("Enter the name of the country: ")
+            capital = input("Enter the name of the capital city: ")
+            add_country(countries_data, country, capital)
 
-figures = [rectangle, circle, triangle, trapezoid]
+        elif choice == "2":
+            country = input("Enter the name of the country to delete: ")
+            remove_country(countries_data, country)
 
-for figure in figures:
-    print(f"Area of {type(figure).__name__}:  {figure.area()}")
+        elif choice == "3":
+            country = input("Enter the country name to search for: ")
+            search_country(countries_data, country)
+
+        elif choice == "4":
+            country = input("Enter the name of the country to edit the capital: ")
+            new_capital = input("Enter a new name for the capital: ")
+            edit_country(countries_data, country, new_capital)
+
+        elif choice == "5":
+            save_data(countries_data, data_filename)
+            print("Data saved.")
+
+        elif choice == "6":
+            countries_data = load_data(data_filename)
+            print("Data loaded.")
+
+        elif choice == "0":
+            save_data(countries_data, data_filename)
+            print("Thank you! \n Data saved.")
+            break
+
+        else:
+            print("Try again.")
+menu()
