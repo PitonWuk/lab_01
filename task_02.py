@@ -1,61 +1,58 @@
 """
 Завдання 2
-Для класів із першого завдання перевизначте магічні
-методи int (повертає площу) та str (повертає інформацію
-про фігуру).
+Створіть програму для проведення опитування або
+анкетування. Зберігайте відповіді користувачів у форматі
+JSON файлу. Кожне опитування може бути окремим
+об'єктом у файлі JSON, а відповіді кожного користувача -
+списком значень.
 """
-import math
-from abc import ABC, abstractmethod
+import json
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+class Survey:
+    def __init__(self, question, options):
+        self.question = question
+        self.options = options
+        self.responses = []
 
-    def __str__(self):
-        return f"Figure: {type(self).__name__}"
+    def display_question(self):
+        print(self.question)
+        for i, option in enumerate(self.options, start=1):
+            print(f"{i}. {option}")
 
-    def __int__(self):
-        return int(self.area())
+    def collect_responses(self):
+        print("Enter the number of answer (1-{0}):".format(len(self.options)))
+        response = input()
+        try:
+            response = int(response)
+            if 1 <= response <= len(self.options):
+                self.responses.append(response)
+                print("Your answer was saved.")
+            else:
+                print("Try again.")
+        except ValueError:
+            print("Enter a number.")
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+    def save_survey_results(self, filename):
+        survey_data = {
+            "question": self.question,
+            "options": self.options,
+            "responses": self.responses
+        }
+        with open(filename, "w") as file:
+            json.dump(survey_data, file, indent=2)
+        print("Results were saved to file {0}.".format(filename))
 
-    def area(self):
-        return self.length * self.width
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+def question():
+    question = "Wat is your favorite color?"
+    options = ["Yellow", "Black", "Blue", "Red", "Other"]
 
-    def area(self):
-        return math.pi * self.radius**2
+    survey = Survey(question, options)
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
 
-    def area(self):
-        return 0.5 * self.base * self.height
+    survey.display_question()
+    survey.collect_responses()
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+    survey.save_survey_results("survey_results.json")
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
-
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
-
-figures = [rectangle, circle, triangle, trapezoid]
-
-for figure in figures:
-    print(f"{str(figure)} - Area: {figure.area()}, Int: {int(figure)}")
+question()

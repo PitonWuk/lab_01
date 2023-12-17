@@ -1,90 +1,63 @@
 """
 Завдання 3
-Створіть базовий клас Shape для рисування плоских фігур.
-Визначте методи:
-■ Show() — виведення на екран інформації про фігуру;
-■ Save() — збереження фігури у файл;
-■ Load() — зчитування фігури з файлу.
-Визначте похідні класи:
-■ Square — квадрат із заданими з координатами лівого
-верхнього кута та довжиною сторони.
-■ Rectangle — прямокутник із заданими координатами
-верхнього лівого кута та розмірами.
-Circle — коло із заданими координатами центру та радіусом.
-■ Ellipse — еліпс із заданими координатами верхнього кута
-описаного навколо нього прямокутника зі сторонами,
-паралельними осям координат, та розмірами цього прямокутника.
-Створіть список фігур, збережіть фігури у файл, завантажте в інший список та відобразіть інформацію про кожну
-фігуру
+До вже реалізованого класу «Стадіон» додайте можливість
+стиснення та розпакування даних з використанням json та
+pickle.
+
 """
+import json
 import pickle
 
-class Shape:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+class Stadium:
+    def __init__(self, name, capacity, location):
+        self.name = name
+        self.capacity = capacity
+        self.location = location
 
-    def show(self):
-        print(f"Position: ({self.x}, {self.y})")
+    def __str__(self):
+        return f"{self.name} (Capacity: {self.capacity}, Location: {self.location})"
 
-    def save(self, new_file):
-        with open(new_file, 'wb') as file:
-            pickle.dump(self, file)
+    def compress_json(self):
+        data = {
+            "name": self.name,
+            "capacity": self.capacity,
+            "location": self.location
+        }
+        compressed_data = json.dumps(data)
+        return compressed_data
 
-    @classmethod
-    def load(cls, new_file):
-        with open(new_file, 'rb') as file:
-            return pickle.load(file)
+    def decompress_json(self, compressed_data):
+        data = json.loads(compressed_data)
+        self.name = data["name"]
+        self.capacity = data["capacity"]
+        self.location = data["location"]
 
-class Square(Shape):
-    def __init__(self, x, y, side_length):
-        super().__init__(x, y)
-        self.side_length = side_length
+    def compress_pickle(self):
+        data = {
+            "name": self.name,
+            "capacity": self.capacity,
+            "location": self.location
+        }
+        compressed_data = pickle.dumps(data)
+        return compressed_data
 
-    def show(self):
-        super().show()
-        print(f"Square with side length: {self.side_length}")
+    def decompress_pickle(self, compressed_data):
+        data = pickle.loads(compressed_data)
+        self.name = data["name"]
+        self.capacity = data["capacity"]
+        self.location = data["location"]
 
-class Rectangle(Shape):
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y)
-        self.width = width
-        self.height = height
 
-    def show(self):
-        super().show()
-        print(f"Rectangle with width: {self.width} and height: {self.height}")
+stadium = Stadium(name="Camp Nou", capacity=99000, location="Barcelona")
 
-class Circle(Shape):
-    def __init__(self, x, y, radius):
-        super().__init__(x, y)
-        self.radius = radius
+compressed_json = stadium.compress_json()
+print("Compressed data (JSON):", compressed_json)
 
-    def show(self):
-        super().show()
-        print(f"Circle with radius: {self.radius}")
+stadium.decompress_json(compressed_json)
+print("Uncompressed data (JSON):", stadium)
 
-class Ellipse(Shape):
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y)
-        self.width = width
-        self.height = height
+compressed_pickle = stadium.compress_pickle()
+print("Compressed data (Pickle):", compressed_pickle)
 
-    def show(self):
-        super().show()
-        print(f"Ellipse with width: {self.width} and height: {self.height}")
-
-square = Square(0, 0, 5)
-rectangle = Rectangle(0, 0, 8, 4)
-circle = Circle(0, 0, 3)
-ellipse = Ellipse(0, 0, 6, 4)
-
-shapes = [square, rectangle, circle, ellipse]
-for i, shape in enumerate(shapes):
-    shape.save(f'shape_{i}.pickle')
-
-loaded_shapes = [Shape.load(f'shape_{i}.pickle') for i in range(len(shapes))]
-
-for loaded_shape in loaded_shapes:
-    loaded_shape.show()
-    print("--------")
+stadium.decompress_pickle(compressed_pickle)
+print("Uncompressed data (Pickle):", stadium)
