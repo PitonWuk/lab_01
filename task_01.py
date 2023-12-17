@@ -1,55 +1,64 @@
 """
 Завдання 1
-Створіть базовий клас «Фігура» з методом для підрахунку
-площі. Створіть похідні класи: прямокутник, коло, прямокутний трикутник, трапеція, зі своїми методами для підрахунку
-площі.
+Розроблення програми з таймером, що підраховує
+час. Використати JSON для збереження стану таймера
+(наприклад, поточний час) у файлі. При перезапуску
+програми відновити час збереженого стану за
+допомогою завантаження даних з JSON-файлу.
+
 """
-import math
-from abc import ABC, abstractmethod
+import json
+import time
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+timer_file = "timer_state.json"
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+def save_timer_state(timer):
+    state = {"start_time": timer["start_time"], "elapsed_time": timer["elapsed_time"]}
+    with open(timer_file, "w") as file:
+        json.dump(state, file)
 
-    def area(self):
-        return self.length * self.width
+def load_timer_state():
+    try:
+        with open(timer_file, "r") as file:
+            state = json.load(file)
+        return state
+    except FileNotFoundError:
+        return None
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+def start_timer():
+    timer = {"start_time": time.time(), "elapsed_time": 0}
+    while True:
+        try:
+            user_input = input("Enter 'stop' to stop the timer: ")
+            if user_input.lower() == "stop":
+                break
+        except KeyboardInterrupt:
+            break
 
-    def area(self):
-        return math.pi * self.radius**2
+        current_time = time.time()
+        timer["elapsed_time"] = current_time - timer["start_time"]
+        print(f"Time: {timer['elapsed_time']:.2f} seconds")
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+        save_timer_state(timer)
 
-    def area(self):
-        return 0.5 * self.base * self.height
+    print("Timer is stopped.")
+    return timer
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+def common_time():
+    saved_state = load_timer_state()
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
+    if saved_state:
+        user_choice = input("Was detected saved timer. Restore (y/n)? ").lower()
+        if user_choice == "y":
+            start_time = saved_state["start_time"]
+            elapsed_time = saved_state["elapsed_time"]
+            timer = {"start_time": start_time, "elapsed_time": elapsed_time}
+        else:
+            timer = start_timer()
+    else:
+        timer = start_timer()
 
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
+    print(f"Common time of timer: {timer['elapsed_time']:.2f} seconds")
 
-figures = [rectangle, circle, triangle, trapezoid]
+common_time()
 
-for figure in figures:
-    print(f"Area of {type(figure).__name__}:  {figure.area()}")
