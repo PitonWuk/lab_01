@@ -1,55 +1,44 @@
 """
 Завдання 1
-Створіть базовий клас «Фігура» з методом для підрахунку
-площі. Створіть похідні класи: прямокутник, коло, прямокутний трикутник, трапеція, зі своїми методами для підрахунку
-площі.
+Розробіть додаток, що імітує чергу запитів до сервера.
+Мають бути клієнти, які надсилають запити на сервер, кожен
+з яких має свій пріоритет. Кожен новий клієнт потрапляє у
+чергу залежно від свого пріоритету. Зберігайте статистику
+запитів (користувач, час) в окремій черзі.
+Передбачте виведення статистики на екран. Вибір необхідних структур даних визначте самостійно.
+
 """
-import math
-from abc import ABC, abstractmethod
+from collections import deque
+import time
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+class ServerQueue:
+    def __init__(self):
+        self.request_queue = deque()
+        self.statistics_queue = deque()
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+    def add_request(self, client, priority):
+        request_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        request = {"client": client, "priority": priority, "time": request_time}
+        self.request_queue.append((priority, request))
+        print(f"Request from {client} with priority {priority} added to the queue.")
 
-    def area(self):
-        return self.length * self.width
+    def process_requests(self):
+        while self.request_queue:
+            priority, request = self.request_queue.popleft()
+            self.statistics_queue.append(request)
+            print(f"Processing request from {request['client']} with priority {priority} at {request['time']}.")
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+    def display_statistics(self):
+        print("\nStatistics:")
+        for request in self.statistics_queue:
+            print(f"{request['client']} - Priority: {request['priority']}, Time: {request['time']}")
 
-    def area(self):
-        return math.pi * self.radius**2
+server = ServerQueue()
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+server.add_request("Client1", 2)
+server.add_request("Client2", 1)
+server.add_request("Client3", 3)
 
-    def area(self):
-        return 0.5 * self.base * self.height
+server.process_requests()
+server.display_statistics()
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
-
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
-
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
-
-figures = [rectangle, circle, triangle, trapezoid]
-
-for figure in figures:
-    print(f"Area of {type(figure).__name__}:  {figure.area()}")

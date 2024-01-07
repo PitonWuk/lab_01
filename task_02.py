@@ -1,61 +1,75 @@
 """
 Завдання 2
-Для класів із першого завдання перевизначте магічні
-методи int (повертає площу) та str (повертає інформацію
-про фігуру).
+Створіть імітаційну модель «Причал морських катерів».
+Введіть таку інформацію:
+1. Середній час між появою пасажирів на причалі у різний
+час доби;
+2. Середній час між появою катерів на причалі у різний час
+доби;
+3. Тип зупинки катера (кінцева або інша).
+Визначіть:
+1. Середній час перебування людини на зупинці;
+2. Достатній інтервал часу між приходами катерів, коли на
+зупинці не більше N людей одночасно;
+3. Кількість вільних місць у катері є випадковою величиною.
+Вибір необхідних структур даних визначте самостійно.
 """
-import math
-from abc import ABC, abstractmethod
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+import random
+import time
 
-    def __str__(self):
-        return f"Figure: {type(self).__name__}"
+class Passenger:
+    def __init__(self, arrival_time):
+        self.arrival_time = arrival_time
+        self.stay_duration = random.uniform(5, 20)
 
-    def __int__(self):
-        return int(self.area())
+class Boat:
+    def __init__(self, arrival_time, stop_type):
+        self.arrival_time = arrival_time
+        self.stop_type = stop_type
+        self.available_seats = random.randint(10, 30)
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+class DockSimulation:
+    def __init__(self):
+        self.passengers = []
+        self.boats = []
 
-    def area(self):
-        return self.length * self.width
+    def generate_passengers(self, num_passengers):
+        for _ in range(num_passengers):
+            arrival_time = random.uniform(0, 24)
+            passenger = Passenger(arrival_time)
+            self.passengers.append(passenger)
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+    def generate_boats(self, num_boats):
+        for _ in range(num_boats):
+            arrival_time = random.uniform(0, 24)
+            stop_type = random.choice(["end", "other"])
+            boat = Boat(arrival_time, stop_type)
+            self.boats.append(boat)
 
-    def area(self):
-        return math.pi * self.radius**2
+    def simulate_dock(self):
+        for boat in self.boats:
+            print(f"Boat arrived at {boat.arrival_time} with {boat.available_seats} available seats and {boat.stop_type} stop.")
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+            passengers_at_stop = [p for p in self.passengers if p.arrival_time <= boat.arrival_time]
+            passengers_in_boat = []
 
-    def area(self):
-        return 0.5 * self.base * self.height
+            for passenger in passengers_at_stop:
+                if passenger.stay_duration > 0 and (boat.stop_type == "other" or boat.available_seats > 0):
+                    passengers_in_boat.append(passenger)
+                    passenger.stay_duration -= 1
+                    if boat.stop_type == "other":
+                        boat.available_seats -= 1
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+            self.passengers = [p for p in self.passengers if p not in passengers_in_boat]
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
+            print(f"Passengers boarded: {len(passengers_in_boat)}, Available seats after boarding: {boat.available_seats}")
 
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
 
-figures = [rectangle, circle, triangle, trapezoid]
+dock_simulator = DockSimulation()
+dock_simulator.generate_passengers(50)
+dock_simulator.generate_boats(10)
 
-for figure in figures:
-    print(f"{str(figure)} - Area: {figure.area()}, Int: {int(figure)}")
+for _ in range(24):
+    dock_simulator.simulate_dock()
+    time.sleep(1)
