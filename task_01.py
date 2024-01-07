@@ -1,55 +1,100 @@
 """
 Завдання 1
-Створіть базовий клас «Фігура» з методом для підрахунку
-площі. Створіть похідні класи: прямокутник, коло, прямокутний трикутник, трапеція, зі своїми методами для підрахунку
-площі.
+Реалізуйте клас стеку для роботи з рядками (стек рядків).
+Стек має бути фіксованого розміру. Реалізуйте набір операцій
+для роботи зі стеком:
+o розміщення рядка у стек;
+o виштовхування рядка зі стеку;
+o підрахунок кількості рядків у стеку;
+o перевірку, чи порожній стек;
+o перевірку, чи повний стек;
+o очищення стеку;
+o отримання значення без виштовхування
+верхнього рядка зі стеку.
+На старті додатка відобразіть меню, в якому користувач
+може вибрати необхідну операцію.
+
 """
-import math
-from abc import ABC, abstractmethod
+class StringStack:
+    def __init__(self, max_size):
+        self.max_size = max_size
+        self.stack = []
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+    def push(self, value):
+        if len(self.stack) < self.max_size:
+            self.stack.append(value)
+            print("Рядок додано до стеку.")
+        else:
+            print("Стек повний. Рядок не може бути доданий.")
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+    def pop(self):
+        if not self.is_empty():
+            popped_value = self.stack.pop()
+            print(f"Рядок '{popped_value}' виштовхнуто зі стеку.")
+        else:
+            print("Стек порожній. Немає рядків для виштовхування.")
 
-    def area(self):
-        return self.length * self.width
+    def count(self):
+        return len(self.stack)
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+    def is_empty(self):
+        return len(self.stack) == 0
 
-    def area(self):
-        return math.pi * self.radius**2
+    def is_full(self):
+        return len(self.stack) == self.max_size
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+    def clear(self):
+        self.stack.clear()
+        print("Стек очищено.")
 
-    def area(self):
-        return 0.5 * self.base * self.height
+    def peek(self):
+        if not self.is_empty():
+            return self.stack[-1]
+        else:
+            print("Стек порожній. Немає рядків для перегляду.")
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
+def display_menu():
+    print("Меню:")
+    print("1. Додати рядок у стек")
+    print("2. Виштовхнути рядок зі стеку")
+    print("3. Кількість рядків у стеку")
+    print("4. Перевірити, чи порожній стек")
+    print("5. Перевірити, чи повний стек")
+    print("6. Очистити стек")
+    print("7. Отримати значення верхнього рядка без виштовхування")
+    print("0. Вийти")
 
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
 
-figures = [rectangle, circle, triangle, trapezoid]
+def main():
+    max_size = int(input("Введіть максимальний розмір стеку: "))
+    stack = StringStack(max_size)
 
-for figure in figures:
-    print(f"Area of {type(figure).__name__}:  {figure.area()}")
+    while True:
+        display_menu()
+        choice = input("Виберіть операцію (0-7): ")
+
+        if choice == "0":
+            print("Дякую за використання програми. До побачення!")
+            break
+        elif choice == "1":
+            value = input("Введіть рядок для додавання до стеку: ")
+            stack.push(value)
+        elif choice == "2":
+            stack.pop()
+        elif choice == "3":
+            print("Кількість рядків у стеку:", stack.count())
+        elif choice == "4":
+            print("Стек порожній:", stack.is_empty())
+        elif choice == "5":
+            print("Стек повний:", stack.is_full())
+        elif choice == "6":
+            stack.clear()
+        elif choice == "7":
+            top_value = stack.peek()
+            if top_value is not None:
+                print("Значення верхнього рядка без виштовхування:", top_value)
+        else:
+            print("Невірний вибір. Спробуйте ще раз.")
+
+main()

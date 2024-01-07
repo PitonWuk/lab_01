@@ -1,61 +1,70 @@
 """
 Завдання 2
-Для класів із першого завдання перевизначте магічні
-методи int (повертає площу) та str (повертає інформацію
-про фігуру).
+Змініть стек із першого завдання таким чином, щоб його
+розмір був нефіксованим.
+
 """
-import math
-from abc import ABC, abstractmethod
+class DynamicStringStack:
+    def __init__(self):
+        self.stack = []
 
-class Figure(ABC):
-    @abstractmethod
-    def area(self):
-        pass
+    def push(self, value):
+        self.stack.append(value)
+        print("Рядок додано до стеку.")
 
-    def __str__(self):
-        return f"Figure: {type(self).__name__}"
+    def pop(self):
+        if not self.is_empty():
+            popped_value = self.stack.pop()
+            print(f"Рядок '{popped_value}' виштовхнуто зі стеку.")
+        else:
+            print("Стек порожній. Немає рядків для виштовхування.")
 
-    def __int__(self):
-        return int(self.area())
+    def count(self):
+        return len(self.stack)
 
-class Rectangle(Figure):
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width
+    def is_empty(self):
+        return len(self.stack) == 0
 
-    def area(self):
-        return self.length * self.width
+    def clear(self):
+        self.stack.clear()
+        print("Стек очищено.")
 
-class Circle(Figure):
-    def __init__(self, radius):
-        self.radius = radius
+    def peek(self):
+        if not self.is_empty():
+            return self.stack[-1]
+        else:
+            print("Стек порожній. Немає рядків для перегляду.")
 
-    def area(self):
-        return math.pi * self.radius**2
+# Функція для відображення меню
+def display_menu():
+    print("Меню:")
+    print("1. Додати рядок у стек")
+    print("2. Виштовхнути рядок зі стеку")
+    print("3. Кількість рядків у стеку")
+    print("4. Очистити стек")
+    print("0. Вийти")
 
-class Triangle(Figure):
-    def __init__(self, base, height):
-        self.base = base
-        self.height = height
+# Основна програма
+def main_dynamic_stack():
+    stack = DynamicStringStack()
 
-    def area(self):
-        return 0.5 * self.base * self.height
+    while True:
+        display_menu()
+        choice = input("Виберіть операцію (0-4): ")
 
-class Trapezoid(Figure):
-    def __init__(self, base1, base2, height):
-        self.base1 = base1
-        self.base2 = base2
-        self.height = height
+        if choice == "0":
+            print("Дякую за використання програми. До побачення!")
+            break
+        elif choice == "1":
+            value = input("Введіть рядок для додавання до стеку: ")
+            stack.push(value)
+        elif choice == "2":
+            stack.pop()
+        elif choice == "3":
+            print("Кількість рядків у стеку:", stack.count())
+        elif choice == "4":
+            stack.clear()
+        else:
+            print("Невірний вибір. Спробуйте ще раз.")
 
-    def area(self):
-        return 0.5 * (self.base1 + self.base2) * self.height
-
-rectangle = Rectangle(5, 8)
-circle = Circle(4)
-triangle = Triangle(6, 10)
-trapezoid = Trapezoid(3, 7, 4)
-
-figures = [rectangle, circle, triangle, trapezoid]
-
-for figure in figures:
-    print(f"{str(figure)} - Area: {figure.area()}, Int: {int(figure)}")
+main_dynamic_stack()
